@@ -65,18 +65,12 @@ func CreateTransactionController(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-// func GetNotificationController(c echo.Context) error {
-// 	var input payment.PaymentNotificationInput
+func ProcessPaymentController(c echo.Context) error {
 
-// 	err := c.Bind(&input)
-// 	if err != nil {
-// 		return err
-// 	}
+	campaignResult, err := usecase.ProcessPayment(c)
+	if err != nil {
+		return err
+	}
 
-// 	err = database.ProcessPayment(c, input)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return c.JSON(http.StatusOK, input)
-// }
+	return c.JSON(http.StatusOK, campaignResult)
+}

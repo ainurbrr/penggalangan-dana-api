@@ -1,10 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/constants"
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/routes"
 
 	config "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/config"
@@ -13,18 +9,10 @@ import (
 )
 
 func main() {
-	
 
 	db := config.Init()
-	app := echo.New()
-	routes.Routes(app, db)
+	e := echo.New()
+	routes.Routes(e, db)
 
-	port := os.Getenv("PORT")
-
-	if port == "" {
-		port = constants.DEFAULT_PORT
-	}
-	appPort := fmt.Sprintf(":%s", port)
-
-	app.Logger.Fatal(app.Start(appPort))
+	e.Logger.Fatal(e.Start(":8080"))
 }
