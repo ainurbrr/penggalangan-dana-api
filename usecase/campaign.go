@@ -10,9 +10,9 @@ import (
 
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/repository/database"
 
-	config "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/config"
-	middlewares "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/middlewares"
-	models "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/config"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/middlewares"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models/payload"
 
 	"github.com/gosimple/slug"
@@ -106,8 +106,30 @@ func UpdateCampaign(c echo.Context) (campaign models.Campaign, err error) {
 	return campaign, nil
 }
 
+func DeleteCampaign(c echo.Context) (campaign models.Campaign, err error) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	campaign, err = database.FindCampaignById(id)
+	if err != nil {
+		return
+	}
+	idFromToken, err := middlewares.ExtractTokenId(c)
+	if err != nil {
+		return campaign, err
+	}
+
+	if campaign.UserID != idFromToken {
+		return campaign, errors.New("Unauthorized")
+	}
+
+	if err = database.DeleteCampaign(&campaign); err != nil {
+		return
+	}
+
+	return campaign, nil
+}
+
 func UploadCampaignImage(c echo.Context) (campaignImages models.Campaign_image, err error) {
-	id :=c.Param("id")
+	id := c.Param("id")
 	campaign_id, _ := strconv.Atoi(id)
 	campaign, err := database.FindCampaignById(campaign_id)
 	if err != nil {
@@ -131,6 +153,7 @@ func UploadCampaignImage(c echo.Context) (campaignImages models.Campaign_image, 
 	campaignImages = models.Campaign_image{}
 	path := fmt.Sprintf("images/campaignImages/%d-%s", campaign_id, file.Filename)
 	c.Bind(&campaignImages)
+	campaignImages.CampaignID = campaign_id
 	campaignImages.FileName = path
 	if campaignImages.IsPrimary == 1 {
 		_, err := MarkAllImagesAsNonPrimary(campaign_id)
@@ -157,7 +180,7 @@ func UploadCampaignImage(c echo.Context) (campaignImages models.Campaign_image, 
 	}
 
 	//save to db
-	if err = database.UploadCampaignImage(campaignImages); err != nil {
+	if err = database.UploadCampaignImage(&campaignImages); err != nil {
 		return campaignImages, err
 	}
 

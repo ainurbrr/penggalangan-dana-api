@@ -5,8 +5,8 @@ import (
 
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/constants"
 
-	controllers "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/controllers"
-	middlewares "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/middlewares"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/controllers"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/middlewares"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
@@ -43,6 +43,7 @@ func Routes(e *echo.Echo, db *gorm.DB) {
 	e.GET("/campaigns/:id", controllers.GetCampaignDetailController)
 	e.POST("/campaign", controllers.CreateCampaignController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.PUT("/campaigns/:id", controllers.UpdateCampaignController, mid.JWT([]byte(constants.SECRET_JWT)))
+	e.DELETE("/campaigns/:id", controllers.DeleteCampaignController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.POST("/campaign-images/:id", controllers.UploadCampaignImageController, mid.JWT([]byte(constants.SECRET_JWT)))
 	e.GET("/campaigns/:id/transactions", controllers.GetCampaignTransactionsController, mid.JWT([]byte(constants.SECRET_JWT)))
 

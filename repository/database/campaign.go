@@ -1,8 +1,8 @@
 package database
 
 import (
-	config "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/config"
-	models "github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/config"
+	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models"
 )
 
 func FindAllCampaign() ([]models.Campaign, error) {
@@ -57,7 +57,14 @@ func UpdateCampaign(campaign *models.Campaign) (err error) {
 	return nil
 }
 
-func UploadCampaignImage(campaignImage models.Campaign_image) (err error) {
+func DeleteCampaign(campaign *models.Campaign) (err error) {
+	if err := config.DB.Delete(campaign).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func UploadCampaignImage(campaignImage *models.Campaign_image) (err error) {
 	if err = config.DB.Create(&campaignImage).Error; err != nil {
 		return
 	}

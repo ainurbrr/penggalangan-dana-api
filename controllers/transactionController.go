@@ -7,7 +7,6 @@ import (
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/formatter"
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/helpers"
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/models/payload"
-	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/payment"
 	"github.com/ainurbrr/go_mini-project_moh-ainur-bahtiar-rohman/tree/main/usecase"
 
 	"github.com/labstack/echo/v4"
@@ -67,9 +66,8 @@ func CreateTransactionController(c echo.Context) error {
 }
 
 func ProcessPaymentController(c echo.Context) error {
-	paymentInput := payment.PaymentNotificationInput{}
 
-	campaignResult, err := usecase.ProcessPayment(c, &paymentInput)
+	campaignResult, err := usecase.ProcessPayment(c)
 	if err != nil {
 		return err
 	}
